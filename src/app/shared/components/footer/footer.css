@@ -1,0 +1,17 @@
+:host { display: block; }
+.footer { padding: 34px max(8%, calc((100% - 1120px) / 2)) 17px; background: #193858; color: #c1d2e2; }
+.footer-main { display: flex; align-items: center; justify-content: space-between; gap: 25px; padding-bottom: 27px; }
+.logo { color: #fff; font-family: Arial, sans-serif; font-size: 21px; font-weight: 800; letter-spacing: -.7px; text-decoration: none; }
+.logo span { color: #ff8a1c; }
+.footer-brand p { margin: 8px 0 0; color: #adc2d7; font-size: 12px; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 22px; }
+.footer-links a { color: #d2dfeb; font-size: 12px; text-decoration: none; }
+.footer-links a:hover { color: #ff9a3d; }
+.footer-bottom { display: flex; justify-content: space-between; gap: 16px; padding-top: 15px; border-top: 1px solid rgba(218, 233, 247, .16); color: #93acc5; font-size: 11px; }
+.footer-bottom b { color: #ff8a1c; }
+@media (max-width: 600px) {
+  .footer { padding: 28px 20px 16px; }
+  .footer-main { align-items: flex-start; flex-direction: column; padding-bottom: 20px; }
+  .footer-links { gap: 16px; }
+  .footer-bottom { flex-direction: column; }
+}

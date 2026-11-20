@@ -1,0 +1,21 @@
+:host { display: block; position: relative; z-index: 5; }
+.navbar { min-height: 72px; padding: 0 max(8%, calc((100% - 1120px) / 2)); display: flex; justify-content: space-between; align-items: center; gap: 25px; background: linear-gradient(110deg, #244f7b, #2d699f); color: #e4eff8; }
+.logo { color: #fff; font-family: Arial, sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -.8px; white-space: nowrap; }
+.logo span { color: #ff8a1c; }
+.nav-links { display: flex; align-items: center; gap: 27px; }
+.nav-links a { color: #d8e6f3; font-size: 14px; font-weight: 600; transition: color .15s ease; }
+.nav-links a:hover, .nav-links a.active { color: #fff; }
+.nav-links a.register-btn { padding: 12px 18px; border-radius: 13px; background: #fa8014; color: #fff; box-shadow: 0 7px 15px rgba(14, 41, 65, .18); }
+.nav-links a.register-btn:hover { background: #ff8b22; }
+.nav-links button { padding: 11px 17px; border: 0; border-radius: 12px; background: #fa8014; color: #fff; font-weight: 700; }
+@media (max-width: 650px) {
+  .navbar { min-height: 64px; padding: 0 18px; }
+  .logo { font-size: 20px; }
+  .nav-links { gap: 12px; }
+  .nav-links a { font-size: 12px; }
+  .nav-links a.register-btn { padding: 10px 12px; }
+}
+@media (max-width: 420px) {
+  .navbar { align-items: flex-start; flex-direction: column; gap: 10px; padding: 14px 18px; }
+  .nav-links { width: 100%; justify-content: space-between; }
+}

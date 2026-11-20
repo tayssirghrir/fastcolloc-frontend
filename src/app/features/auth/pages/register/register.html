@@ -1,0 +1,104 @@
+<div class="signup-shell">
+  <header class="wizard-header">
+    <a class="back-link" *ngIf="currentStep === 0" routerLink="/login">‹ <span>Retour</span></a>
+    <button class="back-link" *ngIf="currentStep > 0" type="button" (click)="previous()">‹ <span>Retour</span></button>
+    <a class="brand" routerLink="/">fast<span>Colloc</span>.tn</a>
+    <span class="step-count">Étape {{ currentStep + 1 }}/6</span>
+  </header>
+
+  <nav class="stepper" aria-label="Étapes d'inscription">
+    <div class="step" *ngFor="let step of steps; let i = index" [class.complete]="i <= currentStep">
+      <span class="step-track"><i></i></span><span class="step-label">{{ step }}</span>
+    </div>
+  </nav>
+
+  <main class="wizard-card" [class.quiz-card]="currentStep === 5">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <section class="wizard-step" *ngIf="currentStep === 0">
+        <h1>Créez votre compte</h1>
+        <p class="subtitle">Commençons par faire connaissance ✨</p>
+        <div class="field-grid">
+          <label class="field"><span>PRÉNOM *</span><input formControlName="firstName" autocomplete="given-name" placeholder="Votre prénom"><small *ngIf="form.get('firstName')?.touched && form.get('firstName')?.invalid">Le prénom est obligatoire.</small></label>
+          <label class="field"><span>NOM *</span><input formControlName="lastName" autocomplete="family-name" placeholder="Votre nom"><small *ngIf="form.get('lastName')?.touched && form.get('lastName')?.invalid">Le nom est obligatoire.</small></label>
+        </div>
+        <div class="field"><span>VOUS ÊTES *</span>
+          <div class="choice-grid two">
+            <button type="button" class="choice large" [class.selected]="form.value.gender === 'Femme'" (click)="form.patchValue({gender: 'Femme'})">Femme</button>
+            <button type="button" class="choice large" [class.selected]="form.value.gender === 'Homme'" (click)="form.patchValue({gender: 'Homme'})">Homme</button>
+          </div>
+          <small *ngIf="form.get('gender')?.touched && form.get('gender')?.invalid">Choisissez une option.</small>
+        </div>
+        <div class="field-grid">
+          <label class="field"><span>ÂGE *</span><input type="number" formControlName="age" min="18" max="100" placeholder="22"><small *ngIf="form.get('age')?.touched && form.get('age')?.invalid">L'inscription est réservée aux personnes de 18 ans ou plus.</small></label>
+          <label class="field"><span>MOT DE PASSE *</span><input type="password" formControlName="password" autocomplete="new-password" placeholder="8 caractères minimum"><small *ngIf="form.get('password')?.touched && form.get('password')?.invalid">8 caractères minimum.</small></label>
+        </div>
+        <label class="field"><span>ADRESSE EMAIL *</span><input type="email" formControlName="email" autocomplete="email" placeholder="vous@exemple.com"><small *ngIf="form.get('email')?.touched && form.get('email')?.invalid">Saisissez une adresse email valide.</small></label>
+      </section>
+
+      <section class="wizard-step" *ngIf="currentStep === 1">
+        <h1>Votre localisation</h1><p class="subtitle">Pour trouver des colocs près de chez vous 📍</p>
+        <label class="field"><span>PAYS *</span><input formControlName="country" autocomplete="country-name"></label>
+        <label class="field"><span>VILLE *</span><select formControlName="city"><option value="">Choisir une ville</option><option *ngFor="let city of cities" [value]="city">{{ city }}</option></select><small *ngIf="form.get('city')?.touched && form.get('city')?.invalid">Choisissez votre ville.</small></label>
+        <label class="field"><span>CODE POSTAL *</span><input formControlName="postalCode" inputmode="numeric" maxlength="4" placeholder="1001"><small *ngIf="form.get('postalCode')?.touched && form.get('postalCode')?.invalid">Saisissez un code postal tunisien à 4 chiffres.</small></label>
+      </section>
+
+      <section class="wizard-step profile-step" *ngIf="currentStep === 2">
+        <h1>Votre profil</h1><p class="subtitle">Aidez-nous à trouver le coloc parfait 🤝</p>
+        <div class="field"><span>ACTIVITÉ PRINCIPALE *</span><div class="pills"><button type="button" class="pill" *ngFor="let activity of activities" [class.selected]="form.value.activity === activity" (click)="form.patchValue({activity})">{{ activity }}</button></div><small *ngIf="form.get('activity')?.touched && form.get('activity')?.invalid">Choisissez votre activité.</small></div>
+        <div class="field"><span>LOISIRS & INTÉRÊTS</span><div class="pills"><button type="button" class="pill" *ngFor="let interest of interests" [class.selected]="isSelected('interests', interest)" (click)="toggleValue('interests', interest)">{{ interest }}</button></div></div>
+        <div class="field-grid profile-meta">
+          <label class="field"><span>NATIONALITÉ</span><select formControlName="nationality"><option>Tunisienne</option><option>Française</option><option>Algérienne</option><option>Marocaine</option><option>Autre</option></select></label>
+          <div class="field"><span>FUMEUR·SE</span><div class="choice-grid two compact"><button type="button" class="choice" [class.selected]="form.value.smoker === 'Non'" (click)="form.patchValue({smoker: 'Non'})">Non 🚭</button><button type="button" class="choice" [class.selected]="form.value.smoker === 'Oui'" (click)="form.patchValue({smoker: 'Oui'})">Oui 🚬</button></div></div>
+        </div>
+        <div class="field"><span>NIVEAU DE PROPRETÉ : {{ form.value.cleanliness }}/10</span><input class="range" type="range" min="1" max="10" formControlName="cleanliness"><div class="range-labels"><span>Décontracté</span><span>Très ordonné</span></div></div>
+        <div class="field"><span>LANGUES PARLÉES</span><div class="pills"><button type="button" class="pill" *ngFor="let language of languages" [class.selected]="isSelected('languages', language)" (click)="toggleValue('languages', language)">{{ language }}</button></div></div>
+        <label class="field"><span>PRÉSENTATION LIBRE</span><textarea formControlName="bio" rows="3" maxlength="500" placeholder="Parlez un peu de vous et de votre coloc idéal…"></textarea></label>
+      </section>
+
+      <section class="wizard-step" *ngIf="currentStep === 3">
+        <h1>Vos contacts</h1><p class="subtitle">Comment les colocataires peuvent vous joindre ? 📞</p>
+        <label class="field"><span>TÉLÉPHONE *</span><input type="tel" formControlName="phone" autocomplete="tel" placeholder="+216 55 123 456"><small *ngIf="form.get('phone')?.touched && form.get('phone')?.invalid">Votre téléphone est obligatoire.</small></label>
+        <div class="field"><span>DISPONIBILITÉS PRÉFÉRÉES</span><div class="choice-grid three"> <button type="button" class="choice" *ngFor="let slot of availability" [class.selected]="isSelected('availability', slot)" (click)="toggleValue('availability', slot)">{{ slot }}</button></div></div>
+        <div class="field"><span>AUTRES MOYENS DE CONTACT</span>
+          <label class="icon-field"><span>📷</span><input formControlName="instagram" placeholder="@votre_compte" aria-label="Instagram"></label>
+          <label class="icon-field"><span>💬</span><input formControlName="whatsapp" placeholder="+216 XX XXX XXX" aria-label="WhatsApp"></label>
+          <label class="icon-field"><span>🔗</span><input formControlName="linkedin" placeholder="linkedin.com/in/..." aria-label="LinkedIn"></label>
+        </div>
+      </section>
+
+      <section class="wizard-step" *ngIf="currentStep === 4">
+        <h1>Vos photos</h1><p class="subtitle">Les profils avec photo reçoivent 3× plus de contacts 📷</p>
+        <div class="photo-grid"><label class="photo-slot" *ngFor="let photo of photos; let i = index" [class.primary-photo]="i === 0" [class.has-photo]="photo">
+          <input type="file" accept="image/jpeg,image/png,image/webp" (change)="onPhotoSelected($event, i)" [attr.aria-label]="i === 0 ? 'Ajouter la photo principale' : 'Ajouter une photo'">
+          <img *ngIf="photo" [src]="photo.url" alt="Aperçu de la photo"><ng-container *ngIf="!photo"><span class="image-icon">▧</span><small *ngIf="i === 0">Photo principale</small></ng-container>
+          <button *ngIf="photo" type="button" class="remove-photo" (click)="removePhoto(i); $event.preventDefault()" aria-label="Retirer la photo">×</button>
+        </label></div>
+        <p class="photo-help">Cliquez sur une case pour ajouter une photo · JPG, PNG, WEBP · Max 5 Mo</p>
+        <aside class="tip"><span>💡</span><p>Conseil : utilisez une photo claire, souriante et bien éclairée. Évitez les lunettes de soleil ou les photos de groupe.</p></aside>
+      </section>
+
+      <section class="wizard-step quiz-step" *ngIf="currentStep === 5">
+        <h1>Quiz Colocation 🎯</h1><p class="subtitle">8 questions pour calculer votre score de compatibilité</p>
+        <div class="quiz-progress" aria-label="Progression du quiz"><i *ngFor="let question of quiz; let i = index" [class.answered]="form.get('quizAnswers')?.value[i]"></i></div>
+        <div class="quiz-list" formArrayName="quizAnswers">
+          <article class="question-card" *ngFor="let question of quiz; let i = index">
+            <h2>{{ i + 1 }}. {{ question.prompt }}</h2><div class="answer-grid">
+              <button type="button" class="answer" *ngFor="let answer of question.answers; let j = index" [class.selected]="form.get('quizAnswers')?.value[i] === answer" (click)="form.get('quizAnswers')?.get(i.toString())?.setValue(answer)">{{ answer }}</button>
+            </div>
+          </article>
+        </div>
+        <div class="answered-banner"><span>✅</span><p><strong>{{ answeredCount }}/8 questions répondues</strong> — Plus vous répondez, plus votre score sera précis !</p></div>
+      </section>
+
+      <p class="error-message" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
+      <p class="success-message" *ngIf="successMessage" role="status">{{ successMessage }}</p>
+      <div class="wizard-actions">
+        <button *ngIf="currentStep === 0" class="secondary-button" type="button" routerLink="/">Annuler</button>
+        <button *ngIf="currentStep > 0" class="secondary-button" type="button" (click)="previous()">← Retour</button>
+        <button *ngIf="currentStep < 5" class="primary-button" type="button" (click)="next()">Continuer →</button>
+        <button *ngIf="currentStep === 5" class="primary-button" type="submit" [disabled]="loading">{{ loading ? 'Création du compte…' : '🎉 Terminer' }}</button>
+      </div>
+    </form>
+  </main>
+  <footer class="privacy-note">Vos données sont protégées · <a routerLink="/">Politique de confidentialité</a></footer>
+</div>

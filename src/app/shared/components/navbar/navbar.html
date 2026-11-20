@@ -1,0 +1,15 @@
+<nav class="navbar">
+  <a routerLink="/" class="logo">fast<span>Colloc</span>.tn</a>
+  <div class="nav-links">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Accueil</a>
+    <a routerLink="/offers" routerLinkActive="active">Offres</a>
+    <a routerLink="/search" routerLinkActive="active">Recherche</a>
+    <a routerLink="/my-listings" routerLinkActive="active" *ngIf="isLoggedIn">Mes annonces</a>
+    <a routerLink="/messages" routerLinkActive="active" *ngIf="isLoggedIn">Messages</a>
+    <a routerLink="/notifications" routerLinkActive="active" *ngIf="isLoggedIn">Notifications</a>
+    <a routerLink="/profile" routerLinkActive="active" *ngIf="isLoggedIn">Mon profil</a>
+    <a routerLink="/login" *ngIf="!isLoggedIn">Connexion</a>
+    <a routerLink="/register" *ngIf="!isLoggedIn" class="register-btn">Créer un compte</a>
+    <button *ngIf="isLoggedIn" (click)="logout()">Déconnexion</button>
+  </div>
+</nav>

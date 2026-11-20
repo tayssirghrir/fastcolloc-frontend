@@ -1,0 +1,81 @@
+<main class="listing-form-page">
+  <a routerLink="/my-listings" class="back">← Mes annonces</a>
+  <header>
+    <span class="eyebrow">VOTRE ESPACE PROPRIÉTAIRE</span>
+    <h1>{{ id ? 'Modifier l’annonce' : 'Publier une annonce' }}</h1>
+    <p>Présentez votre logement aux futurs colocataires.</p>
+  </header>
+
+  <p *ngIf="loading" class="state">Chargement de l’annonce…</p>
+  <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="save()">
+    <section>
+      <h2>Le logement</h2>
+      <div class="fields">
+        <label class="wide">Titre de l’annonce
+          <input formControlName="title" maxlength="120" required placeholder="Ex. Chambre lumineuse près de l’université">
+        </label>
+        <label>Type de logement
+          <select formControlName="type">
+            <option value="CHAMBRE">Chambre</option>
+            <option value="APPARTEMENT">Appartement</option>
+            <option value="STUDIO">Studio</option>
+            <option value="MAISON">Maison</option>
+          </select>
+        </label>
+        <label>Loyer mensuel (TND)
+          <input formControlName="price" type="number" min="0.01" step="0.01" required>
+        </label>
+        <label>Ville<input formControlName="city" maxlength="80" required></label>
+        <label>Quartier<input formControlName="neighborhood" maxlength="80"></label>
+        <label class="wide">Description<textarea formControlName="description" rows="4" maxlength="2000"></textarea></label>
+        <label>Disponible à partir du<input formControlName="availableFrom" type="date"></label>
+        <label>Nombre de chambres<input formControlName="roomsCount" type="number" min="0"></label>
+        <label>Colocataires recherchés<input formControlName="roommatesCount" type="number" min="0"></label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Localisation</h2>
+      <p class="hint">Les coordonnées permettent d’afficher l’annonce sur la SmartMap. Position approximative recommandée.</p>
+      <div class="fields">
+        <label>Latitude<input formControlName="latitude" type="number" min="-90" max="90" step="any" required></label>
+        <label>Longitude<input formControlName="longitude" type="number" min="-180" max="180" step="any" required></label>
+        <label class="wide">Adresse (facultative)<input formControlName="address" maxlength="255"></label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Vie en colocation</h2>
+      <div class="checks">
+        <label><input formControlName="furnished" type="checkbox"> Logement meublé</label>
+        <label><input formControlName="smokersAllowed" type="checkbox"> Fumeurs acceptés</label>
+        <label><input formControlName="petsAllowed" type="checkbox"> Animaux acceptés</label>
+        <label><input formControlName="guestsAllowed" type="checkbox"> Invités acceptés</label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Photos <small>{{ existingPhotos.length + selectedFiles.length }}/6</small></h2>
+      <div class="photo-grid">
+        <article *ngFor="let photo of existingPhotos">
+          <img [src]="photo.url" alt="Photo de l’annonce">
+          <span *ngIf="photo.position === 0">Photo principale</span>
+          <button type="button" *ngIf="photo.position !== 0" (click)="setCover(photo.id)">Choisir en couverture</button>
+          <button type="button" (click)="removePhoto(photo.id)" aria-label="Supprimer la photo">Supprimer</button>
+        </article>
+        <article *ngFor="let file of selectedFiles"><span>{{ file.name }}</span></article>
+      </div>
+      <label class="upload">Ajouter des photos
+        <input type="file" accept="image/jpeg,image/png,image/webp" multiple (change)="onFiles($event)"
+               [disabled]="existingPhotos.length + selectedFiles.length >= 6">
+      </label>
+      <p class="hint">6 photos maximum, 5 Mo par photo. Les photos supprimées le sont immédiatement. La première photo ajoutée devient la couverture.</p>
+    </section>
+
+    <p class="message" *ngIf="error">{{ error }}</p>
+    <footer>
+      <a routerLink="/my-listings" class="cancel">Annuler</a>
+      <button [disabled]="saving">{{ saving ? 'Enregistrement…' : id ? 'Enregistrer les modifications' : 'Publier l’annonce' }}</button>
+    </footer>
+  </form>
+</main>

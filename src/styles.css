@@ -1,0 +1,47 @@
+
+/* Reset général */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Variables FastColloc */
+:root {
+  --primary-color: #7655B5;
+  --primary-dark: #5E4295;
+  --secondary-color: #F4F0EB;
+  --background-color: #FFFFFF;
+  --text-color: #263238;
+  --border-color: #E5E0EA;
+  --success-color: #198754;
+  --danger-color: #DC3545;
+}
+
+/* Corps de l'application */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  min-height: 100vh;
+}
+
+/* Formulaires */
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Liens */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Boutons */
+button {
+  cursor: pointer;
+}

@@ -1,0 +1,23 @@
+<section class="search-page">
+  <form class="toolbar" (ngSubmit)="search()">
+    <label class="city-filter">Ville <input name="city" [(ngModel)]="city" placeholder="Quartier, ville..."></label>
+    <label class="budget-filter">Budget min <input name="budgetMin" type="number" min="0" [(ngModel)]="budgetMin"><span>max</span><b>{{ budgetMax }} TND</b><input name="budget" type="range" min="100" max="1500" step="50" [(ngModel)]="budgetMax"></label>
+    <select name="type" [(ngModel)]="type"><option value="">Tous les types</option><option value="CHAMBRE">Chambre</option><option value="APPARTEMENT">Appartement</option><option value="STUDIO">Studio</option><option value="MAISON">Maison</option></select>
+    <select name="sort" [(ngModel)]="sort"><option value="score">Compatibilite</option><option value="recent">Plus recentes</option><option value="price_asc">Prix croissant</option><option value="price_desc">Prix decroissant</option></select>
+    <button class="apply">Rechercher</button><button type="button" class="reset" (click)="reset()">Reinitialiser</button>
+  </form>
+  <div class="alert-bar"><span>Alertes</span><span>{{ alertMessage || 'Recevez les nouvelles annonces correspondant a cette recherche.' }}</span><button type="button" (click)="createAlert()">Enregistrer l'alerte</button></div>
+  <div class="search-body">
+    <aside class="results-panel">
+      <div class="results-heading"><strong>{{ total }} resultats</strong><span>Classes par compatibilite</span></div>
+      <p class="notice" *ngIf="error">{{ error }}</p><p class="notice" *ngIf="loading">Recherche...</p>
+      <article class="result-card" *ngFor="let offer of results" (click)="selectOffer(offer)" [class.selected]="selectedId === offer.id">
+        <a class="result-photo" [routerLink]="['/offers', offer.id]" [style.background-image]="offer.coverUrl ? 'url(' + offer.coverUrl + ')' : null"><span>Verifie</span></a>
+        <div class="result-info"><div class="score" [class.low]="(offer.score ?? 0) < 50" [class.mid]="(offer.score ?? 0) >= 50 && (offer.score ?? 0) < 75" *ngIf="offer.score !== null">{{ offer.score }}%</div><a [routerLink]="['/offers', offer.id]" class="title">{{ offer.title }}</a><p>{{ offer.city }}<span *ngIf="offer.neighborhood">, {{ offer.neighborhood }}</span></p><div class="badges"><span>{{ offer.type }}</span><span *ngIf="offer.furnished">Meuble</span><span>{{ level(offer.score) }}</span></div><strong class="price">{{ offer.price }} TND <small>/mois</small></strong></div>
+      </article>
+      <nav class="pagination" *ngIf="totalPages > 1"><button type="button" [disabled]="page === 0 || loading" (click)="changePage(page - 1)">Precedent</button><span>Page {{ page + 1 }} / {{ totalPages }}</span><button type="button" [disabled]="page + 1 >= totalPages || loading" (click)="changePage(page + 1)">Suivant</button></nav>
+      <div class="empty" *ngIf="!loading && !error && !results.length"><h2>Aucun logement trouve</h2><p>Essayez d'elargir votre budget ou de modifier la ville.</p></div>
+    </aside>
+    <section class="map-panel"><div class="map-heading"><span>SmartMap - annonces localisees</span><span class="map-legend"><i class="green-dot"></i>Compatibilite elevee <i class="orange-dot"></i>Moyenne <i class="red-dot"></i>Faible</span></div><div id="smart-map" class="map-canvas"></div></section>
+  </div>
+</section>
